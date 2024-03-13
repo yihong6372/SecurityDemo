@@ -4,10 +4,8 @@ import net.geekh.securitydemo.domain.User;
 import net.geekh.securitydemo.service.LoginService;
 import net.geekh.securitydemo.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author YIHONG
@@ -24,5 +22,11 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseVo login(@RequestBody User user) {
         return loginService.login(user);
+    }
+
+    @PreAuthorize("hasAuthority('test')")
+    @GetMapping("/logout")
+    public ResponseVo logout() {
+        return loginService.logout();
     }
 }

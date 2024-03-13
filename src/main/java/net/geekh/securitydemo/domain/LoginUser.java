@@ -1,24 +1,46 @@
 package net.geekh.securitydemo.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class LoginUser implements UserDetails {
     
     private User xxuser;
-    
+
+    private List<String> permissions;
+
+    public LoginUser(User xxuser, List<String> permissions) {
+        this.xxuser = xxuser;
+        this.permissions = permissions;
+    }
+
+    @JSONField(serialize = false)
+    private List<SimpleGrantedAuthority> authorities;
+
     @Override
-    //用于返回权限信息。现在我们正在学'认证'，'权限'后面才学。所以返回null即可
+    //用于返回权限信息。
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        if (authorities != null) {
+            return authorities;
+        }
+
+        return permissions
+                .stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
     }
 
     @Override

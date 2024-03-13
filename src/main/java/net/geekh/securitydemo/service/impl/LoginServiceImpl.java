@@ -11,10 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Objects;
+
+import static net.geekh.securitydemo.consts.UserConst.LOGIN_TOKEN;
+import static net.geekh.securitydemo.consts.UserConst.USER_REDIS_KEY;
 
 /**
  * @Author YIHONG
@@ -43,11 +47,20 @@ public class LoginServiceImpl implements LoginService {
 
         LoginUser loginUser = (LoginUser)authenticate.getPrincipal();
         String userId = loginUser.getXxuser().getId().toString();
-//        String jwt = JwtUtil.createJWT(userId);
-// TODO jwt报错
+        String jwt = JwtUtil.createJWT(userId);
         HashMap<String, String> map = new HashMap<>();
-        map.put("token", userId);
-        redisCache.setCacheObject("login:" + userId, loginUser);
+        map.put(LOGIN_TOKEN, jwt);
+        redisCache.setCacheObject(USER_REDIS_KEY + userId, loginUser);
         return new ResponseVo(200, "登陆成功", map);
+    }
+
+    @Override
+    public ResponseVo logout() {
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authenticationToken.getPrincipal();
+
+        redisCache.deleteObject(USER_REDIS_KEY + loginUser.getXxuser().getId());
+        return new ResponseVo<>(200, "登出成功");
     }
 }

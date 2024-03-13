@@ -10,4 +10,6 @@ import net.geekh.securitydemo.vo.ResponseVo;
  */
 public interface LoginService {
     ResponseVo login(User user);
+
+    ResponseVo logout();
 }

@@ -19,7 +19,7 @@ import java.util.UUID;
 public class JwtUtil {
     public static final Long JWT_TTL = 60 * 60 *1000L;// 60 * 60 *1000  一个小时
     //设置秘钥明文, 注意长度必须大于等于6位
-    public static final String JWT_KEY = "huanfqc";
+    public static final String JWT_KEY = "hong";
 
     public static String getUUID(){
         String token = UUID.randomUUID().toString().replaceAll("-", "");

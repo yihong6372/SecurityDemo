@@ -1,5 +1,6 @@
 package net.geekh.securitydemo.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @RequestMapping("/hello")
+//    @PreAuthorize("hasAuthority('system:test:list')")
     public String hello() {
         return "Hello World!";
     }

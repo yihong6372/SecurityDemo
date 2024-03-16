@@ -1,5 +1,6 @@
 package net.geekh.securitydemo.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import net.geekh.securitydemo.domain.LoginUser;
 import net.geekh.securitydemo.domain.User;
 import net.geekh.securitydemo.service.LoginService;
@@ -26,6 +27,7 @@ import static net.geekh.securitydemo.consts.UserConst.USER_REDIS_KEY;
  * @Date 2024/3/13 08:14
  */
 @Service
+@Slf4j
 public class LoginServiceImpl implements LoginService {
 
     @Autowired
@@ -40,7 +42,6 @@ public class LoginServiceImpl implements LoginService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-
         if (Objects.isNull(authenticate)) {
             throw new RuntimeException("登陆失败");
         }

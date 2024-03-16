@@ -3,6 +3,7 @@ package net.geekh.securitydemo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import net.geekh.securitydemo.domain.LoginUser;
 import net.geekh.securitydemo.domain.User;
+import net.geekh.securitydemo.mapper.MenuMapper;
 import net.geekh.securitydemo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,9 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private MenuMapper menuMapper;
+
     @Override
     //UserDetails是Security官方提供的接口
     public UserDetails loadUserByUsername(String xxusername) throws UsernameNotFoundException {
@@ -35,10 +39,12 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
             throw new RuntimeException("用户名或者密码错误");
         }
 
-        List<String> list = new ArrayList<>(Arrays.asList("test","adminAuth","huanfAuth"));
+
+        //获取权限信息
+        List<String> perms = menuMapper.selectPermsByUserId(user.getId());
 
         //把查询到的user结果，封装成UserDetails类型，然后返回。
         //但是由于UserDetails是个接口，所以我们先需要在domino目录新建LoginUser类，作为UserDetails的实现类，再写下面那行
-        return new LoginUser(user,list);
+        return new LoginUser(user,perms);
     }
 }

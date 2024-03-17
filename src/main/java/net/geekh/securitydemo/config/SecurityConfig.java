@@ -1,12 +1,12 @@
 package net.geekh.securitydemo.config;
 
 import net.geekh.securitydemo.filter.JwtAuthenticationTokenFilter;
+import net.geekh.securitydemo.handler.AccessDeniedHandlerImpl;
+import net.geekh.securitydemo.handler.AuthenticationEntryPointImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,17 +26,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
+                                                   AuthenticationEntryPointImpl authenticationEntryPoint,
+                                                   AccessDeniedHandlerImpl accessDeniedHandler) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(authoroze -> authoroze
-                .requestMatchers("/user/login").permitAll()
+                .requestMatchers("/user/login","/error").permitAll()
                 .anyRequest().authenticated()
         );
 
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        //自定义异常处理配置
+        http.exceptionHandling(exception -> {
+            exception.authenticationEntryPoint(authenticationEntryPoint);
+            exception.accessDeniedHandler(accessDeniedHandler);
+        });
 
         return http.build();
     }

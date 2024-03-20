@@ -25,6 +25,5 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
         String json = JSON.toJSONString(result);
         //WebUtils是我们在utils目录写好的类
         WebUtils.renderString(response,json);
-
     }
 }

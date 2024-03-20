@@ -9,6 +9,7 @@ import net.geekh.securitydemo.domain.LoginUser;
 import net.geekh.securitydemo.utils.JwtUtil;
 import net.geekh.securitydemo.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -48,7 +49,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userId = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("token 非法");
+//            throw new InsufficientAuthenticationException("token 非法");
+            request.setAttribute("err", "token 非法");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         String redisKey = USER_REDIS_KEY + userId;
@@ -56,7 +60,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         //判断获取到的用户信息是否为空，因为redis里面可能并不存在这个用户信息，例如缓存过期了
         if (Objects.isNull(loginUser)) {
-            throw new RuntimeException("用户未登陆111");
+//            throw new InsufficientAuthenticationException("用户未登陆111");
+            request.setAttribute("err", "用户未登陆");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         //把最终的LoginUser用户信息，通过setAuthentication方法，存入SecurityContextHolder

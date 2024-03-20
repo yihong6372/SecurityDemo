@@ -25,10 +25,10 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        log.info((String) request.getAttribute("err"));
         ResponseVo vo = new ResponseVo<>(HttpStatus.UNAUTHORIZED.value(), "认证异常" + authException.getMessage());
         String jsonString = JSON.toJSONString(vo);
-        String message = authException.getMessage();
-        log.info("----->{}",message);
+        log.info("--->{}",authException.toString());
         WebUtils.renderString(response, jsonString);
     }
 }

@@ -2,6 +2,7 @@ package net.geekh.securitydemo.handler;
 
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import net.geekh.securitydemo.domain.ErrorLog;
 import net.geekh.securitydemo.service.ErrorLogService;
 import net.geekh.securitydemo.vo.ResponseVo;
@@ -23,10 +24,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @ControllerAdvice
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @Autowired
     private ErrorLogService errorLogService;
+
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     @ResponseBody
@@ -38,13 +41,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseVo handleRuntimeException(Exception e) {
+
+        errorLogService.saveLog(e);
         System.out.println("RuntimeException========"+e.getMessage() );
         return new ResponseVo(-111, "RuntimeException="+e.toString());
     }
 
-    private void saveErrorLog() {
-        ErrorLog errorLog = new ErrorLog();
-
-        errorLogService.save(errorLog);
-    }
 }

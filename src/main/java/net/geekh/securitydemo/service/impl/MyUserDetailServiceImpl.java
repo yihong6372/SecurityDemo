@@ -1,6 +1,7 @@
 package net.geekh.securitydemo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import net.geekh.securitydemo.domain.LoginUser;
 import net.geekh.securitydemo.domain.User;
 import net.geekh.securitydemo.mapper.MenuMapper;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class MyUserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -36,7 +38,8 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
         User user = userMapper.selectOne(queryWrapper);
         //如果用户传进来的用户名，但是数据库没有这个用户名，就会导致我们是查不到的情况，那么就进行下面的判断。避免程序安全问题
         if(Objects.isNull(user)){//判断user对象是否为空。当在数据库没有查到数据时，user就会为空，也就会进入这个判断
-            throw new RuntimeException("用户名或者密码错误");
+            log.info("输入的用户名为空{}",user);
+            throw new RuntimeException("用户名者密码错误");
         }
 
 

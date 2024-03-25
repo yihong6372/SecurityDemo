@@ -10,4 +10,6 @@ import java.util.List;
 public interface OpLogService extends IService<OpLog> {
 
     List<OpLog> getLoginLogList();
+
+    List<OpLog> getOpLogList();
 }

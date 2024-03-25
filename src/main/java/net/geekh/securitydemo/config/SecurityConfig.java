@@ -35,7 +35,7 @@ public class SecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(authoroze -> authoroze
-                .requestMatchers("/user/register","/user/login","/error").permitAll()
+                .requestMatchers("/user/register","/user/login","/error","/sse/**","/test/hello2").permitAll()
                 .anyRequest().authenticated()
         );
 

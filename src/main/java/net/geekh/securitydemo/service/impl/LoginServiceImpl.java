@@ -42,6 +42,7 @@ public class LoginServiceImpl implements LoginService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
         if (Objects.isNull(authenticate)) {
             throw new RuntimeException("登陆失败");
         }

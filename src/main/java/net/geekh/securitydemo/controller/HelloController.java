@@ -18,4 +18,10 @@ public class HelloController {
     public String hello() {
         return "Hello World!";
     }
+
+    @RequestMapping("/hello2")
+//    @PreAuthorize("hasAuthority('system:test:list')")
+    public String hello2() {
+        return "Hello World222!";
+    }
 }

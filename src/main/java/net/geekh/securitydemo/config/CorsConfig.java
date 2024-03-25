@@ -1,7 +1,10 @@
 package net.geekh.securitydemo.config;
 
+import net.geekh.securitydemo.handler.AccessInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -11,6 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private AccessInterceptor accessInterceptor;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -23,5 +29,10 @@ public class CorsConfig implements WebMvcConfigurer {
                 .maxAge(3600);
 
         WebMvcConfigurer.super.addCorsMappings(registry);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(accessInterceptor);
     }
 }

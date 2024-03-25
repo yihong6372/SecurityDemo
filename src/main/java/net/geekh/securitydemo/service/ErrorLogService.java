@@ -8,4 +8,8 @@ import net.geekh.securitydemo.domain.ErrorLog;
 import java.util.List;
 
 public interface ErrorLogService extends IService<ErrorLog> {
+
+     void saveLog(Exception e);
+
+     void saveLog(Exception e, String msg);
 }

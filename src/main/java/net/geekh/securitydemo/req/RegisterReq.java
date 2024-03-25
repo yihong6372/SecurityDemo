@@ -1,5 +1,7 @@
 package net.geekh.securitydemo.req;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -16,6 +18,7 @@ public class RegisterReq {
 
     private String password;
 
+    @JsonProperty("checkPass")
     private String password2;
 
     private Integer smsCode;

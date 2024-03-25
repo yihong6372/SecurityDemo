@@ -9,7 +9,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@TableName("b_op_log")
+@TableName("op_log")
 public class OpLog implements Serializable {
     @TableId(value = "id",type = IdType.AUTO)
     public Long id;

@@ -5,8 +5,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import net.geekh.securitydemo.service.ErrorLogService;
 import net.geekh.securitydemo.utils.WebUtils;
 import net.geekh.securitydemo.vo.ResponseVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -23,12 +25,16 @@ import java.io.IOException;
 @Slf4j
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
+    @Autowired
+    private ErrorLogService errorLogService;
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.info((String) request.getAttribute("err"));
-        ResponseVo vo = new ResponseVo<>(HttpStatus.UNAUTHORIZED.value(), "认证异常" + authException.getMessage());
+        ResponseVo vo = new ResponseVo<>(HttpStatus.UNAUTHORIZED.value(), "认证异常, 请重新登陆！！");
         String jsonString = JSON.toJSONString(vo);
-        log.info("--->{}",authException.toString());
+        log.info("AuthenticationEntryPoint--->{}",authException.toString());
+        errorLogService.saveLog(authException, vo.getMsg());
         WebUtils.renderString(response, jsonString);
     }
 }

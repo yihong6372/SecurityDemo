@@ -51,7 +51,7 @@ public class LoginController {
         return new ResponseVo(200, "查询成功", user);
     }
 
-    @PutMapping("userInfo")
+    @PutMapping("/userInfo")
     public ResponseVo updateUserInfo(@RequestBody User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
@@ -67,7 +67,26 @@ public class LoginController {
         return new ResponseVo<>(200, "修改信息成功");
     }
 
-    @PreAuthorize("hasAuthority('system:test:list')")
+//    @PutMapping("/userPwd")
+//    public ResponseVo resetPassword(String oldPassword, String newPassword) {
+//        LoginUserContextBean loginUser = SecurityContextUtil.getLoginUser();
+//        String userName = loginUser.getUsername();
+//        String password = loginUser.getPassword();
+//        if (!SecurityContextUtil.matchesPassword(oldPassword, password)) {
+//            return Result.fail("修改密码失败，旧密码错误");
+//        }
+//        if (SecurityContextUtil.matchesPassword(newPassword, password)) {
+//            return Result.fail("新密码不能与旧密码相同");
+//        }
+//        if (!userService.resetUserPwd(userName, newPassword)) {
+//            return Result.fail("修改密码异常，请联系管理员");
+//        }
+//        // 更新缓存用户密码
+//        tokenService.setLoginUser(loginUser);
+//        return Result.success();
+//    }
+
+//    @PreAuthorize("hasAuthority('system:test:list')")
     @GetMapping("/logout")
     public ResponseVo logout() {
         return loginService.logout();
